@@ -1,0 +1,30 @@
+HELP.md
+
+# Maven build output
+/target/
+
+# InteliJ IDEA compilation output
+/out/
+
+# Other potential build files
+/bin/
+
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# InteliJ IDEA configuration
+.idea
+*.iws
+*.iml
+*.ipr
+
