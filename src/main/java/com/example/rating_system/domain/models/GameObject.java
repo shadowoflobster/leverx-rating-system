@@ -38,20 +38,24 @@ public class GameObject {
             throw new IllegalArgumentException("Title cannot be empty");
         }
         this.title = title.trim();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setDescription(String description) {
         this.description = description != null ? description.trim() : null;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setUser(User user) {
         if (user == null) throw new IllegalArgumentException("User is required");
         this.user = user;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setGame(Game game) {
         if (game == null) throw new IllegalArgumentException("Game is required");
         this.game = game;
+        this.updatedAt = LocalDateTime.now();
     }
 
 

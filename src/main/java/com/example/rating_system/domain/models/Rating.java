@@ -35,15 +35,18 @@ public class Rating {
         if (score >= 1 && score <= 5) {
             this.score = score;
         } else throw new IllegalArgumentException("Score must be between 1 and 5");
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setAuthor(User author) {
         if (author == null) throw new IllegalArgumentException("Author cannot be null");
         this.author = author;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setTargetSeller(User targetSeller) {
         if (targetSeller == null) throw new IllegalArgumentException("Target Seller cannot be null");
         this.targetSeller = targetSeller;
+        this.updatedAt = LocalDateTime.now();
     }
 }
