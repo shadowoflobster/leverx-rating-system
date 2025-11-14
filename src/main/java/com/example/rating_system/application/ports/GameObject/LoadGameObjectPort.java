@@ -15,5 +15,5 @@ public interface LoadGameObjectPort {
 
     List<GameObject> loadByName(String name);
 
-    List<GameObject> loadByGame(Game game)
+    List<GameObject> loadByGame(Game game);
 }
