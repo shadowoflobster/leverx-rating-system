@@ -3,7 +3,6 @@ package com.example.rating_system.domain.models;
 import com.example.rating_system.domain.enums.UserRole;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
