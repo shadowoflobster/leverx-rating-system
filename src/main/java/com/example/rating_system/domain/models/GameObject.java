@@ -1,11 +1,13 @@
 package com.example.rating_system.domain.models;
 
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class GameObject {
-    private Integer id;               // auto-generated
+    private Integer id;
     private String title;
     private String description;
     private User user;
@@ -13,13 +15,22 @@ public class GameObject {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private GameObject(Builder builder) {
-        this.title = builder.title;
-        this.description = builder.description;
-        this.user = builder.user;
-        this.game = builder.game;
-        this.createdAt = builder.createdAt != null ? builder.createdAt : LocalDateTime.now();
-        this.updatedAt = builder.updatedAt != null ? builder.updatedAt : this.createdAt;
+    @Builder
+    public GameObject(String title,
+                      User user,
+                      Game game,
+                      LocalDateTime createdAt,
+                      LocalDateTime updatedAt) {
+
+        if (title == null || title.isBlank()) throw new IllegalArgumentException("Title required");
+        if (user == null) throw new IllegalArgumentException("User required");
+        if (game == null) throw new IllegalArgumentException("Game required");
+
+        this.title = title.trim();
+        this.user = user;
+        this.game = game;
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+        this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
     }
 
     public void setTitle(String title) {
@@ -44,40 +55,4 @@ public class GameObject {
     }
 
 
-    public static class Builder {
-        private String title;
-        private String description;
-        private User user;
-        private Game game;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-
-        public Builder title(String title) {
-            if (title == null || title.isBlank()) {
-                throw new IllegalArgumentException("Title cannot be empty");
-            }
-            this.title = title.trim();
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description != null ? description.trim() : null;
-            return this;
-        }
-
-        public Builder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public Builder game(Game game) {
-            this.game = game;
-            return this;
-        }
-
-
-        public GameObject build() {
-            return new GameObject(this);
-        }
-    }
 }
