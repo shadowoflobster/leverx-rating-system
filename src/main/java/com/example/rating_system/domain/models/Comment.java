@@ -1,0 +1,48 @@
+package com.example.rating_system.domain.models;
+
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+
+@Getter
+public class Comment {
+    private Integer id;
+    private String message;
+    private User author;
+    private User targetSeller;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @Builder
+    public Comment(String message,
+                   User author,
+                   User targetSeller,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt
+    ) {
+        if (author == null) throw new IllegalArgumentException("Author required");
+        if (targetSeller == null) throw new IllegalArgumentException("Target Seller required");
+        if (message == null || message.isBlank()) throw new IllegalArgumentException("Message shouldn't be blank");
+        this.message = message;
+        this.author = author;
+        this.targetSeller = targetSeller;
+        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+        this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
+    }
+
+    public void setMessage(String message) {
+        if (message == null || message.isBlank()) throw new IllegalArgumentException("Message shouldn't be blank");
+        this.message = message;
+    }
+
+    public void setAuthor(User author) {
+        if (author == null) throw new IllegalArgumentException("Author cannot be null");
+        this.author = author;
+    }
+
+    public void setTargetSeller(User targetSeller) {
+        if (targetSeller == null) throw new IllegalArgumentException("Target Seller cannot be null");
+        this.targetSeller = targetSeller;
+    }
+}
