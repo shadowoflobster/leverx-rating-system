@@ -8,9 +8,7 @@ public class GameObject {
     private Integer id;               // auto-generated
     private String title;
     private String description;
-    @Setter
     private User user;
-    @Setter
     private Game game;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
