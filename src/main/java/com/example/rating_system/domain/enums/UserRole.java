@@ -1,5 +1,8 @@
 package com.example.rating_system.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRole {
     ADMINISTRATOR("Administrator"),
     SELLER("Seller"),
