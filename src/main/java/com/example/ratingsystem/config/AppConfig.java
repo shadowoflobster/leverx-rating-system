@@ -31,6 +31,11 @@ public class AppConfig {
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
 
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setUrl(System.getenv("RATING_SYSTEM_DB_URL"));
+        ds.setUsername(System.getenv("RATING_SYSTEM_DB_USER"));
+        ds.setPassword(System.getenv("RATING_SYSTEM_DB_PASSWORD"));
+
         return ds;
     }
 
@@ -39,7 +44,7 @@ public class AppConfig {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
 
-        em.setPackagesToScan("com.example.rating_system.adapters.outbound.persistence.entities");
+        em.setPackagesToScan("com.example.ratingsystem.adapters.outbound.persistence.entities");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
@@ -50,7 +55,7 @@ public class AppConfig {
     }
 
     @Bean
-    private Properties jpaProperties() {
+    public Properties jpaProperties() {
         Properties props = new Properties();
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         props.put("hibernate.hbm2ddl.auto", "validate");
