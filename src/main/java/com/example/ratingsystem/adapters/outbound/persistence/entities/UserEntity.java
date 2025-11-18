@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
-@Table(name = "users", schema = "leverx-rating")
+@Table(name = "users", schema = "leverx_ratings")
 @Getter
 @Setter
 public class UserEntity {
