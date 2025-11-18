@@ -20,7 +20,8 @@ public class User {
     private ArrayList<GameObject> gameObjects;
 
     @Builder
-    public User(String firstName,
+    public User(Integer id,
+                String firstName,
                 String lastName,
                 String email,
                 String password,
@@ -28,6 +29,7 @@ public class User {
                 UserRole role,
                 ArrayList<Game> games,
                 ArrayList<GameObject> gameObjects) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
