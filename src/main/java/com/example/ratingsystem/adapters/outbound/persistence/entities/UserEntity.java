@@ -4,6 +4,7 @@ import com.example.ratingsystem.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users", schema = "leverx_ratings")
 @Getter
 @Setter
@@ -19,7 +21,7 @@ public class UserEntity {
     private Integer id;
 
     @Column(name = "first_name")
-    private String fistName;
+    private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
