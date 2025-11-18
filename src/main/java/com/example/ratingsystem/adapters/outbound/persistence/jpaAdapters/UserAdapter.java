@@ -1,5 +1,6 @@
 package com.example.ratingsystem.adapters.outbound.persistence.jpaAdapters;
 
+import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.mappers.UserMapper;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
@@ -31,11 +32,11 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
     }
 
     @Override
-    public User save(User user) {
-        if (user == null) {
+    public User save(UserRequest userRequest) {
+        if (userRequest == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
-        UserEntity entity = userMapper.domainToEntity(user);
+        UserEntity entity = userMapper.requestToEntity(userRequest);
         UserEntity savedEntity = userRepository.save(entity);
 
         return userMapper.entityToDomain(savedEntity);
