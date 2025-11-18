@@ -21,6 +21,9 @@ public class CommentEntity {
     @JoinColumn(name = "target_seller_id")
     private UserEntity target;
 
+    @Column(name = "is_approved")
+    private boolean isApproved;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
