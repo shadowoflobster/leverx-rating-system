@@ -2,6 +2,7 @@ package com.example.ratingsystem.domain.models;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,8 @@ public class Comment {
     private String message;
     private User author;
     private User targetSeller;
+    @Setter
+    private boolean approved;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -18,6 +21,7 @@ public class Comment {
     public Comment(String message,
                    User author,
                    User targetSeller,
+                   boolean approved,
                    LocalDateTime createdAt,
                    LocalDateTime updatedAt
     ) {
@@ -27,6 +31,7 @@ public class Comment {
         this.message = message;
         this.author = author;
         this.targetSeller = targetSeller;
+        this.approved = approved;
         this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
         this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
     }
@@ -48,4 +53,5 @@ public class Comment {
         this.targetSeller = targetSeller;
         this.updatedAt = LocalDateTime.now();
     }
+
 }
