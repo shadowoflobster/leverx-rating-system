@@ -1,5 +1,6 @@
 package com.example.ratingsystem.adapters.outbound.persistence.mappers;
 
+import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.models.User;
 
@@ -44,5 +45,28 @@ public class UserMapper {
         entity.setTakenRating(new ArrayList<>());
 
         return entity;
+    }
+
+    public UserEntity requestToEntity(UserRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        UserEntity entity = new UserEntity();
+
+        entity.setEmail(request.getEmail());
+        entity.setFirstName(request.getFirstName());
+        if (request.getLastName() != null && !request.getLastName().isBlank()) {
+            entity.setLastName(request.getLastName());
+        }
+        entity.setPassword(request.getPassword());
+        entity.setGameObjects(new ArrayList<>());
+        entity.setGivenComments(new ArrayList<>());
+        entity.setTakenComments(new ArrayList<>());
+        entity.setGivenRating(new ArrayList<>());
+        entity.setTakenRating(new ArrayList<>());
+
+        return entity;
+
     }
 }
