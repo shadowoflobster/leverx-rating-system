@@ -18,11 +18,12 @@ public enum UserRole {
         return dbValue;
     }
 
-    public static UserRole fromDbValue(String dbValue){
-        for(UserRole role : values()){
-            if(role.getDbValue().equalsIgnoreCase(dbValue)){
+    public static UserRole fromDbValue(String dbValue) {
+        for (UserRole role : values()) {
+            if (role.getDbValue().equalsIgnoreCase(dbValue)) {
                 return role;
             }
-        } throw new IllegalArgumentException("Unknown role:" + dbValue);
+        }
+        throw new IllegalArgumentException("Unknown role:" + dbValue);
     }
 }
