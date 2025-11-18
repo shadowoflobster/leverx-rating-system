@@ -2,6 +2,7 @@ package com.example.ratingsystem.adapters.outbound.persistence.mappers;
 
 import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
+import com.example.ratingsystem.domain.enums.UserRole;
 import com.example.ratingsystem.domain.models.User;
 
 import java.util.ArrayList;
@@ -54,12 +55,17 @@ public class UserMapper {
 
         UserEntity entity = new UserEntity();
 
-        entity.setEmail(request.getEmail());
-        entity.setFirstName(request.getFirstName());
+        entity.setEmail(request.getEmail().trim());
+        entity.setFirstName(request.getFirstName().trim());
         if (request.getLastName() != null && !request.getLastName().isBlank()) {
-            entity.setLastName(request.getLastName());
+            entity.setLastName(request.getLastName().trim());
         }
         entity.setPassword(request.getPassword());
+        if (request.getRole() != null && !request.getRole().isBlank()) {
+            entity.setRole(UserRole.valueOf(request.getRole().toUpperCase()));
+        } else {
+            entity.setRole(UserRole.USER);
+        }
         entity.setGameObjects(new ArrayList<>());
         entity.setGivenComments(new ArrayList<>());
         entity.setTakenComments(new ArrayList<>());
