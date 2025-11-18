@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface LoadUserPort {
     Optional<User> loadById(Integer id);
 
-    List<User> loadByName(String firstName);
+    List<User> loadByFullName(String fullName);
 
 }
