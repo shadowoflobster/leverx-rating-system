@@ -18,6 +18,7 @@ import java.util.List;
 @Setter
 public class UserEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "first_name")
@@ -47,11 +48,14 @@ public class UserEntity {
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
     private List<RatingEntity> takenRating;
 
+    @Column(name = "is_approved")
+    private boolean approved;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)// Hibernate 6+
     @Column(name = "role")
-    @Enumerated(EnumType.STRING)
     private UserRole role;
 
 
