@@ -71,7 +71,7 @@ public class User {
     }
 
     public void setRole(UserRole role) {
-        this.role = (role == null) ? UserRole.USER : role;
+        this.role = (role == null) ? UserRole.User : role;
     }
 
     public void setGames(ArrayList<Game> games) {
