@@ -8,10 +8,12 @@ import com.example.ratingsystem.application.ports.User.LoadUserPort;
 import com.example.ratingsystem.application.ports.User.SaveUserPort;
 import com.example.ratingsystem.domain.models.User;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 @AllArgsConstructor
 public class UserAdapter implements LoadUserPort, SaveUserPort {
     private JpaUserRepository userRepository;
@@ -25,6 +27,8 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
 
     @Override
     public List<User> loadByFullName(String fullName) {
+
+        String searchPattern = "%" + fullName.trim() + "%";
         return userRepository.findByFullName(fullName)
                 .stream()
                 .map(userMapper::entityToDomain)
@@ -41,8 +45,6 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
 
         return userMapper.entityToDomain(savedEntity);
     }
-
-
 
 
 }
