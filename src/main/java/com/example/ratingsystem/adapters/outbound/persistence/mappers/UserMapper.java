@@ -4,9 +4,11 @@ import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.enums.UserRole;
 import com.example.ratingsystem.domain.models.User;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@Component
 public class UserMapper {
     public User entityToDomain(UserEntity entity) {
         if (entity == null) {
@@ -62,9 +64,9 @@ public class UserMapper {
         }
         entity.setPassword(request.getPassword());
         if (request.getRole() != null && !request.getRole().isBlank()) {
-            entity.setRole(UserRole.valueOf(request.getRole().toUpperCase()));
+            entity.setRole(UserRole.valueOf(request.getRole()));
         } else {
-            entity.setRole(UserRole.USER);
+            entity.setRole(UserRole.User);
         }
         entity.setGameObjects(new ArrayList<>());
         entity.setGivenComments(new ArrayList<>());
