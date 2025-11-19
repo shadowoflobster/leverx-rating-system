@@ -16,7 +16,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.example.ratingsystem.adapters.inbound")
+@ComponentScan("com.example.ratingsystem.adapters.inbound.rest")
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
