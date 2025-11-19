@@ -3,6 +3,7 @@ package com.example.ratingsystem.domain.models;
 import com.example.ratingsystem.domain.enums.UserRole;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class User {
     private String password;
     private LocalDateTime createdAt;
     private UserRole role;
+    @Setter
+    private boolean approved;
     private ArrayList<Game> games;
     private ArrayList<GameObject> gameObjects;
 
@@ -27,6 +30,7 @@ public class User {
                 String password,
                 LocalDateTime createdAt,
                 UserRole role,
+                boolean approved,
                 ArrayList<Game> games,
                 ArrayList<GameObject> gameObjects) {
         this.id = id;
@@ -36,6 +40,7 @@ public class User {
         this.password = password;
         this.createdAt = createdAt;
         this.role = role;
+        this.approved = approved;
         this.games = games;
         this.gameObjects = gameObjects;
     }
