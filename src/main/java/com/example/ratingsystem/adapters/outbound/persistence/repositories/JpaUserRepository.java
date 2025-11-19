@@ -10,6 +10,6 @@ import java.util.List;
 public interface JpaUserRepository extends JpaRepository<UserEntity, Integer> {
 
     @Query("SELECT u FROM UserEntity u " +
-            "WHERE LOWER(CONCAT(u.firstName, ' ' , u.lastName)) LIKE LOWER(CONCAT('%', : namePart, '%'))")
+            "WHERE LOWER(CONCAT(u.firstName || ' ' ||  u.lastName)) LIKE LOWER(:fullName)")
     List<UserEntity> findByFullName(@Param("fullName") String fullName);
 }
