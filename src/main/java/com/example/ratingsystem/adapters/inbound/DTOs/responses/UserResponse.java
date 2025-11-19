@@ -1,18 +1,22 @@
 package com.example.ratingsystem.adapters.inbound.DTOs.responses;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
-    private final Integer id;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final LocalDateTime createdAt;
-    private final String role;
-    private final List<Integer> gameIds;
-    private final List<Integer> gameObjectIds;
+    private Integer id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private LocalDateTime createdAt;
+    private String role;
+    private List<Integer> gameIds;
+    private List<Integer> gameObjectIds;
 }
