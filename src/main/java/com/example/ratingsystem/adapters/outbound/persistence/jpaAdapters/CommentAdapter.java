@@ -7,6 +7,7 @@ import com.example.ratingsystem.adapters.outbound.persistence.mappers.CommentMap
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaCommentRepository;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
 import com.example.ratingsystem.application.ports.Comment.AddCommentPort;
+import com.example.ratingsystem.domain.models.Comment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,13 @@ public class CommentAdapter implements AddCommentPort {
     private CommentMapper commentMapper;
 
     @Override
-    public void add(CommentRequest commentRequest) {
+    public Comment add(CommentRequest commentRequest) {
         if (commentRequest == null) {
             throw new IllegalArgumentException("Comment cannot be null");
+        }
+
+        if (commentRequest.getTargetId() == null) {
+            throw new IllegalArgumentException("Target user ID is required");
         }
 
         UserEntity target = jpaUserRepository.findById(commentRequest.getTargetId())
@@ -34,7 +39,9 @@ public class CommentAdapter implements AddCommentPort {
 
         CommentEntity entity = commentMapper.requestToEntity(commentRequest, author, target);
 
-        jpaCommentRepository.save(entity);
+        CommentEntity saved = jpaCommentRepository.save(entity);
+
+        return commentMapper.entityToDomain(saved);
     }
 
 }
