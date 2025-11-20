@@ -18,14 +18,14 @@ public class Comment {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Comment(String message,
+    public Comment(Integer id,
+                   String message,
                    User author,
                    User targetSeller,
                    boolean approved,
                    LocalDateTime createdAt,
                    LocalDateTime updatedAt
     ) {
-        if (author == null) throw new IllegalArgumentException("Author required");
         if (targetSeller == null) throw new IllegalArgumentException("Target Seller required");
         if (message == null || message.isBlank()) throw new IllegalArgumentException("Message shouldn't be blank");
         this.message = message;
@@ -34,6 +34,7 @@ public class Comment {
         this.approved = approved;
         this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
         this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
+        this.id = id;
     }
 
     public void setMessage(String message) {
