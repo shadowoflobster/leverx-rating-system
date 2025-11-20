@@ -1,5 +1,6 @@
 package com.example.ratingsystem.config;
 
+import io.micrometer.common.lang.NonNull;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -14,6 +15,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     }
 
     @Override
+    @NonNull
     protected String[] getServletMappings() {
         return new String[]{"/", "/api/auth/register",
                 "/api/comment/add"};
