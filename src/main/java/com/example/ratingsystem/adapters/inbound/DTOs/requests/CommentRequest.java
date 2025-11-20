@@ -1,9 +1,13 @@
 package com.example.ratingsystem.adapters.inbound.DTOs.requests;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentRequest {
     @NotBlank(message = "Message text is required")
     String message;
