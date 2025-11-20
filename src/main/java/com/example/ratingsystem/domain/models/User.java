@@ -39,7 +39,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
-        this.role = role;
+        this.role = (role == null) ? UserRole.User : role;
         this.approved = approved;
         this.games = games;
         this.gameObjects = gameObjects;
