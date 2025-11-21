@@ -29,6 +29,10 @@ public class GameObject {
         if (user == null) throw new IllegalArgumentException("User required");
         if (game == null) throw new IllegalArgumentException("Game required");
 
+        if (description != null) {
+            this.description = null;
+        }
+
         this.title = title.trim();
         this.user = user;
         this.game = game;
