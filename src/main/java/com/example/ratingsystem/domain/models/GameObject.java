@@ -2,10 +2,12 @@ package com.example.ratingsystem.domain.models;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class GameObject {
     private Integer id;
     private String title;
@@ -17,6 +19,7 @@ public class GameObject {
 
     @Builder
     public GameObject(String title,
+                      String description,
                       User user,
                       Game game,
                       LocalDateTime createdAt,
