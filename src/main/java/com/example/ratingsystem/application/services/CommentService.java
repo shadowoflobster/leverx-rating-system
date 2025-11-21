@@ -6,6 +6,7 @@ import com.example.ratingsystem.adapters.outbound.persistence.mappers.CommentMap
 import com.example.ratingsystem.application.ports.Comment.AddCommentPort;
 import com.example.ratingsystem.application.ports.Comment.DeleteCommentPort;
 import com.example.ratingsystem.application.ports.Comment.LoadCommentPort;
+import com.example.ratingsystem.application.ports.Comment.UpdateCommentPort;
 import com.example.ratingsystem.domain.models.Comment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,10 @@ public class CommentService {
     private LoadCommentPort loadCommentPort;
     private DeleteCommentPort deleteCommentPort;
     private final CommentMapper commentMapper;
+    private UpdateCommentPort updateCommentPort;
 
-    public CommentResponse addComment(CommentRequest commentRequest) {
+    public CommentResponse addComment(Integer id, CommentRequest commentRequest) {
+        commentRequest.setTargetId(id);
         Comment commentDomain = addCommentPort.add(commentRequest);
 
         return commentMapper.domainToResponse(commentDomain);
@@ -34,11 +37,31 @@ public class CommentService {
         return commentMapper.domainToResponse(commentModel);
     }
 
-    public CommentResponse loadCommentByAuthorAndTargetId(Integer authorId, Integer targetId) {
-        Comment commentDomain = loadCommentPort.loadByAuthorAndTargetId(authorId, targetId)
+    public CommentResponse loadCommentByIdForUser(Integer userId, Integer commentId) {
+        if (userId == null || commentId == null) {
+            throw new IllegalArgumentException("User ID and Comment ID are required");
+        }
+
+        Comment comment = loadCommentPort.load(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 
-        return commentMapper.domainToResponse(commentDomain);
+        if (!comment.getTargetSeller().getId().equals(userId)) {
+            throw new IllegalArgumentException("Comment does not belong to this user");
+        }
+
+        return commentMapper.domainToResponse(comment);
+    }
+
+    public List<CommentResponse> loadCommentByAuthorAndTargetId(Integer authorId, Integer targetId) {
+        List<Comment> commentDomain = loadCommentPort.loadByAuthorAndTargetId(authorId, targetId);
+
+        if (commentDomain == null || commentDomain.isEmpty()) {
+            return List.of();
+        }
+
+        return commentDomain.stream()
+                .map(commentMapper::domainToResponse)
+                .toList();
     }
 
     public List<CommentResponse> loadCommentByTargetId(Integer targetId) {
@@ -52,6 +75,13 @@ public class CommentService {
 
     public void deleteById(Integer id) {
         deleteCommentPort.deleteCommentById(id);
+    }
+
+    public CommentResponse updateComment(Integer id, CommentRequest request) {
+        Comment comment = updateCommentPort.updateComment(id, request);
+
+
+        return commentMapper.domainToResponse(comment);
     }
 
 
