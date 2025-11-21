@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addComment(@RequestBody CommentRequest request) {
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<?> addComment(@PathVariable("id") Integer id, @RequestBody CommentRequest request) {
         try {
-            CommentResponse commentResponse = commentService.addComment(request);
+            CommentResponse commentResponse = commentService.addComment(id, request);
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
@@ -39,7 +39,7 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/comments/{id}")
     public ResponseEntity<?> getCommentById(@PathVariable("id") Integer id) {
         try {
             CommentResponse commentResponse = commentService.loadCommentById(id);
@@ -62,7 +62,7 @@ public class CommentController {
 
     }
 
-    @GetMapping("/get_by_target_id/{targetId}")
+    @GetMapping("/:id/comments")
     public ResponseEntity<?> getCommentByTargetId(@PathVariable("targetId") Integer targetId) {
         try {
             List<CommentResponse> commentResponses = commentService.loadCommentByTargetId(targetId);
@@ -85,16 +85,30 @@ public class CommentController {
 
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<?> getCommentByAuthorAndTargetId(@RequestParam Integer authorId, @RequestParam Integer targetId) {
+    @GetMapping("/{userId}/comments/{commentId}")
+    public ResponseEntity<?> getComment(
+            @PathVariable Integer userId,
+            @PathVariable Integer commentId) {
+
+        CommentResponse commentResponse = commentService.loadCommentByIdForUser(userId, commentId);
+
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "data", commentResponse
+        ));
+    }
+
+    @GetMapping("/comments/filter")
+    public ResponseEntity<?> getCommentByAuthorAndTargetId(@RequestParam Integer authorId,
+                                                           @RequestParam Integer targetId) {
         try {
-            CommentResponse commentResponse = commentService.loadCommentByAuthorAndTargetId(authorId, targetId);
+            List<CommentResponse> commentResponses = commentService.loadCommentByAuthorAndTargetId(authorId, targetId);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(Map.of(
                             "success", true,
-                            "data", commentResponse
+                            "data", commentResponses
 
                     ));
         } catch (Exception ex) {
@@ -114,6 +128,30 @@ public class CommentController {
     public ResponseEntity<Void> deleteComment(@PathVariable Integer id) {
         commentService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/comments/{id}")
+    public ResponseEntity<?> updateComment(@PathVariable Integer id, @RequestBody CommentRequest request) {
+
+        try {
+            CommentResponse response = commentService.updateComment(id, request);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Map.of(
+                            "success", true,
+                            "data", response
+
+                    ));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of(
+                            "success", false,
+                            "message", ex.getMessage()
+                    ));
+        }
+
     }
 
 }
