@@ -9,17 +9,19 @@ import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUs
 import com.example.ratingsystem.application.ports.Comment.AddCommentPort;
 import com.example.ratingsystem.application.ports.Comment.DeleteCommentPort;
 import com.example.ratingsystem.application.ports.Comment.LoadCommentPort;
+import com.example.ratingsystem.application.ports.Comment.UpdateCommentPort;
 import com.example.ratingsystem.domain.models.Comment;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @AllArgsConstructor
-public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCommentPort {
+public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCommentPort, UpdateCommentPort {
     private JpaCommentRepository jpaCommentRepository;
     private JpaUserRepository jpaUserRepository;
     private CommentMapper commentMapper;
@@ -43,21 +45,7 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
                     .orElseThrow(() -> new IllegalArgumentException("Author user not found"));
         }
 
-        Optional<CommentEntity> existing =
-                jpaCommentRepository.findByAuthor_IdAndTarget_Id(
-                        commentRequest.getAuthorId(),
-                        commentRequest.getTargetId()
-                );
-
-        CommentEntity entity;
-
-        if (existing.isPresent()) {
-            entity = existing.get();
-            entity.setMessage(commentRequest.getMessage());
-            entity.setUpdatedAt(LocalDateTime.now());
-        } else {
-            entity = commentMapper.requestToEntity(commentRequest, author, target);
-        }
+        CommentEntity entity = commentMapper.requestToEntity(commentRequest, author, target);
 
         CommentEntity saved = jpaCommentRepository.save(entity);
 
@@ -77,18 +65,22 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
     }
 
     @Override
-    public Optional<Comment> loadByAuthorAndTargetId(Integer authorId, Integer targetId) {
+    public List<Comment> loadByAuthorAndTargetId(Integer authorId, Integer targetId) {
         if (targetId == null) {
             throw new IllegalArgumentException("Target ID is required");
         }
+
         if (authorId == null) {
-            return Optional.empty();
+            return List.of(); // empty list
         }
 
         return jpaCommentRepository
                 .findByAuthor_IdAndTarget_Id(authorId, targetId)
-                .map(commentMapper::entityToDomain);
+                .stream()
+                .map(commentMapper::entityToDomain)
+                .toList();
     }
+
 
     @Override
     public List<Comment> loadByTargetId(Integer targetId) {
@@ -112,6 +104,25 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
         }
 
         jpaCommentRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public Comment updateComment(Integer id, CommentRequest request) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+        if (request == null) {
+            throw new IllegalArgumentException("request cannot be null");
+        }
+
+        CommentEntity entity = jpaCommentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        entity.setMessage(request.getMessage());
+
+        CommentEntity saved = jpaCommentRepository.save(entity);
+
+        return commentMapper.entityToDomain(saved);
     }
 
 
