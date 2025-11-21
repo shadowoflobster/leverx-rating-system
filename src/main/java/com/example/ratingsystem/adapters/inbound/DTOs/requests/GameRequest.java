@@ -1,9 +1,15 @@
 package com.example.ratingsystem.adapters.inbound.DTOs.requests;
 
-import lombok.Value;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GameRequest {
-    String title;
-    String description;
+    @NotBlank(message = "Game title is required")
+    private String title;
+    private String description;
 }
