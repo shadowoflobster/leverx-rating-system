@@ -2,10 +2,12 @@ package com.example.ratingsystem.domain.models;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 
 @Getter
+@NoArgsConstructor
 public class Game {
     private Integer id;
     private String title;
