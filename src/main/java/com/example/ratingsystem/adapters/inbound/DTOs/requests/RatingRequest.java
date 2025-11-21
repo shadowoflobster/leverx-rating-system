@@ -1,10 +1,14 @@
 package com.example.ratingsystem.adapters.inbound.DTOs.requests;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RatingRequest {
-    short score;
-    Integer authorId;
-    Integer targetId;
+    private short score;
+    private Integer authorId;
+    private Integer targetId;
 }
