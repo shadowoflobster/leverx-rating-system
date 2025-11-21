@@ -1,11 +1,19 @@
 package com.example.ratingsystem.adapters.outbound.persistence.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ratings")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "ratings", schema = "leverx_ratings")
 public class RatingEntity {
     @Id
     private Integer id;
