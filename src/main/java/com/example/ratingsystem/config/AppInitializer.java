@@ -17,7 +17,6 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @Override
     @NonNull
     protected String[] getServletMappings() {
-        return new String[]{"/", "/api/auth/register",
-                "/api/comment/add"};
+        return new String[]{"/"};
     }
 }
