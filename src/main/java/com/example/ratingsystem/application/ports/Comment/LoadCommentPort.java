@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface LoadCommentPort {
     Optional<Comment> load(Integer id);
 
-    Optional<Comment> loadByAuthorAndTargetId(Integer authorId, Integer targetId);
+    List<Comment> loadByAuthorAndTargetId(Integer authorId, Integer targetId);
 
-    List<Comment> loadByTargetUserId(String targetId);
+    List<Comment> loadByTargetId(Integer targetId);
 }
