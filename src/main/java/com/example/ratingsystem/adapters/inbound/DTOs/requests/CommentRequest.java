@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentRequest {
     @NotBlank(message = "Message text is required")
-    String message;
-    Integer authorId;
+    private String message;
+    private Integer authorId;
 
-    Integer targetId;
+    private Integer targetId;
 
 }
