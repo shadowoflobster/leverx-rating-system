@@ -1,11 +1,13 @@
 package com.example.ratingsystem.adapters.inbound.DTOs.requests;
 
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GameObjectRequest {
-    String title;
-    String description;
-    String userEmail;
-    Integer gameId;
+    private String title;
+    private String description;
+    private Integer userId;
+    private Integer gameId;
 }
