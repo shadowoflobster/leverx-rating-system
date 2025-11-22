@@ -26,6 +26,12 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
     }
 
     @Override
+    public UserEntity loadEntityById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No user found with email"));
+    }
+
+    @Override
     public List<User> loadByFullName(String fullName) {
 
         String searchPattern = "%" + fullName.trim() + "%";
@@ -40,10 +46,26 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
         if (userRequest == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
+
         UserEntity entity = userMapper.requestToEntity(userRequest);
         UserEntity savedEntity = userRepository.save(entity);
 
         return userMapper.entityToDomain(savedEntity);
+    }
+
+    @Override
+    public User loadByEmail(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("No user found with email"));
+
+        return userMapper.entityToDomain(user);
+
+    }
+
+    @Override
+    public UserEntity loadEntityByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("No user found with email"));
     }
 
 
