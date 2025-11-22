@@ -27,25 +27,24 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
     private CommentMapper commentMapper;
 
     @Override
-    public Comment add(CommentRequest commentRequest) {
-        if (commentRequest == null) {
-            throw new IllegalArgumentException("Comment cannot be null");
-        }
-
-        if (commentRequest.getTargetId() == null) {
+    public Comment add(Integer targetId, String authorEmail, CommentRequest request) {
+        if (targetId == null) {
             throw new IllegalArgumentException("Target user ID is required");
         }
-
-        UserEntity target = jpaUserRepository.findById(commentRequest.getTargetId())
-                .orElseThrow(() -> new IllegalArgumentException("Target user not found"));
-
-        UserEntity author = null;
-        if (commentRequest.getAuthorId() != null) {
-            author = jpaUserRepository.findById(commentRequest.getAuthorId())
-                    .orElseThrow(() -> new IllegalArgumentException("Author user not found"));
+        if (authorEmail == null || authorEmail.isBlank()) {
+            throw new IllegalArgumentException("Author email is required");
+        }
+        if (request == null || request.getMessage() == null || request.getMessage().isBlank()) {
+            throw new IllegalArgumentException("Comment content is required");
         }
 
-        CommentEntity entity = commentMapper.requestToEntity(commentRequest, author, target);
+        UserEntity target = jpaUserRepository.findById(targetId)
+                .orElseThrow(() -> new IllegalArgumentException("Target user not found"));
+
+        UserEntity author = jpaUserRepository.findByEmail(authorEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Author user not found"));
+
+        CommentEntity entity = commentMapper.requestToEntity(request, author, target);
 
         CommentEntity saved = jpaCommentRepository.save(entity);
 
