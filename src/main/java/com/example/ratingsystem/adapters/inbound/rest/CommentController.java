@@ -6,6 +6,7 @@ import com.example.ratingsystem.application.services.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,24 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<?> addComment(@PathVariable("id") Integer id, @RequestBody CommentRequest request) {
+    public ResponseEntity<?> addComment(@PathVariable("id") Integer id,
+                                        @RequestBody CommentRequest request,
+                                        Authentication authentication
+    ) {
+        System.out.println("Authentication object: " + authentication);
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication.getPrincipal() == null) {
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            "success", false,
+                            "message", "You must be logged in to comment"
+                    ));
+        }
+        String authorEmail = authentication.getName();
         try {
-            CommentResponse commentResponse = commentService.addComment(id, request);
+            CommentResponse commentResponse = commentService.addComment(id, request, authorEmail);
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
@@ -62,8 +78,8 @@ public class CommentController {
 
     }
 
-    @GetMapping("/:id/comments")
-    public ResponseEntity<?> getCommentByTargetId(@PathVariable("targetId") Integer targetId) {
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<?> getCommentByTargetId(@PathVariable("id") Integer targetId) {
         try {
             List<CommentResponse> commentResponses = commentService.loadCommentByTargetId(targetId);
 
