@@ -1,12 +1,13 @@
 package com.example.ratingsystem.config;
 
+import com.example.ratingsystem.adapters.inbound.security.SecurityConfig;
 import io.micrometer.common.lang.NonNull;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class};
+        return new Class<?>[]{AppConfig.class, SecurityConfig.class};
     }
 
     @Override
