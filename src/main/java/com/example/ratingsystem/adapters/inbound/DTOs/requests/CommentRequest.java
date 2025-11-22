@@ -11,8 +11,4 @@ import lombok.NoArgsConstructor;
 public class CommentRequest {
     @NotBlank(message = "Message text is required")
     private String message;
-    private Integer authorId;
-
-    private Integer targetId;
-
 }
