@@ -6,7 +6,8 @@
     <groupId>com.example</groupId>
     <artifactId>rating-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging> <name>rating-system</name>
+    <packaging>war</packaging>
+    <name>rating-system</name>
     <description>Demo project for Spring Framework</description>
 
     <properties>
@@ -19,7 +20,9 @@
         <validation.version>3.0.2</validation.version>
         <jackson-databind.version>2.15.4</jackson-databind.version>
         <logback.version>1.5.19</logback.version>
-        <servlet.api.version>6.0.0</servlet.api.version> <postgresql.version>42.7.2</postgresql.version> </properties>
+        <servlet.api.version>6.0.0</servlet.api.version>
+        <postgresql.version>42.7.2</postgresql.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -70,12 +73,32 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
+            <version>6.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
 
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -110,7 +133,8 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson-databind.version}</version> </dependency>
+            <version>${jackson-databind.version}</version>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
