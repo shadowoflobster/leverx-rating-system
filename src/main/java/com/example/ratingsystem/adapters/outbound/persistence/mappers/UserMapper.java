@@ -4,12 +4,17 @@ import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.enums.UserRole;
 import com.example.ratingsystem.domain.models.User;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
 @Component
+@AllArgsConstructor
 public class UserMapper {
+    private PasswordEncoder passwordEncoder;
+
     public User entityToDomain(UserEntity entity) {
         if (entity == null) {
             return null;
@@ -57,16 +62,16 @@ public class UserMapper {
 
         UserEntity entity = new UserEntity();
 
-        entity.setEmail(request.getEmail().trim());
+        entity.setEmail(request.getEmail().trim().toLowerCase());
         entity.setFirstName(request.getFirstName().trim());
         if (request.getLastName() != null && !request.getLastName().isBlank()) {
             entity.setLastName(request.getLastName().trim());
         }
-        entity.setPassword(request.getPassword());
+        entity.setPassword(passwordEncoder.encode(request.getPassword()));
         if (request.getRole() != null && !request.getRole().isBlank()) {
             entity.setRole(UserRole.valueOf(request.getRole()));
         } else {
-            entity.setRole(UserRole.User);
+            entity.setRole(UserRole.Seller);
         }
         entity.setGameObjects(new ArrayList<>());
         entity.setGivenComments(new ArrayList<>());
