@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "game_objects")
+@Table(name = "game_objects", schema = "leverx_ratings")
 public class GameObjectEntity {
     @Id
     private Integer id;
