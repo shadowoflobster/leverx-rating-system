@@ -72,8 +72,6 @@ public class RatingAdapter implements AddRatingPort, LoadRatingPort {
         return ratingMapper.entityToDomain(ratingEntity);
     }
 
-    ;
-
     @Override
     public Rating loadByAuthorAndTargetId(Integer authorId, Integer targetId) {
         RatingEntity ratingEntity = ratingRepository.findByAuthor_IdAndTarget_Id(authorId, targetId)
