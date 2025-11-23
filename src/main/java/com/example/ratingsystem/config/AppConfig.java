@@ -23,7 +23,8 @@ import java.util.Properties;
 @ComponentScan({
         "com.example.ratingsystem.application.services",
         "com.example.ratingsystem.adapters.outbound",
-        "com.example.ratingsystem.adapters.inbound.security"
+        "com.example.ratingsystem.adapters.inbound.security",
+        "com.example.ratingsystem.config"
 })
 @EnableJpaRepositories(
         basePackages = "com.example.ratingsystem.adapters.outbound.persistence",
@@ -36,9 +37,9 @@ public class AppConfig {
         DriverManagerDataSource ds = new DriverManagerDataSource();
 
         ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUrl(System.getenv("RATING_SYSTEM_DB_URL"));
-        ds.setUsername(System.getenv("RATING_SYSTEM_DB_USER"));
-        ds.setPassword(System.getenv("RATING_SYSTEM_DB_PASSWORD"));
+        ds.setUrl(System.getProperty("jdbc.url"));
+        ds.setUsername(System.getProperty("jdbc.username"));
+        ds.setPassword(System.getProperty("jdbc.password"));
 
         return ds;
     }
@@ -62,6 +63,7 @@ public class AppConfig {
     public Properties jpaProperties() {
         Properties props = new Properties();
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        props.put("hibernate.default_schema", "leverx_ratings");
         props.put("hibernate.hbm2ddl.auto", "validate");
         props.put("hibernate.show_sql", "true");
         props.put("hibernate.format_sql", "true");
