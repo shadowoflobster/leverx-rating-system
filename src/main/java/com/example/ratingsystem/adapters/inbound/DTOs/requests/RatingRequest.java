@@ -9,6 +9,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RatingRequest {
     private short score;
-    private Integer authorId;
-    private Integer targetId;
 }
