@@ -19,6 +19,8 @@ public class User {
     private UserRole role;
     @Setter
     private boolean approved;
+    @Setter
+    private boolean verified;
     private ArrayList<Game> games;
     private ArrayList<GameObject> gameObjects;
 
@@ -30,6 +32,7 @@ public class User {
                 String password,
                 LocalDateTime createdAt,
                 UserRole role,
+                boolean verified,
                 boolean approved,
                 ArrayList<Game> games,
                 ArrayList<GameObject> gameObjects) {
@@ -39,7 +42,8 @@ public class User {
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
-        this.role = (role == null) ? UserRole.User : role;
+        this.role = (role == null) ? UserRole.Seller : role;
+        this.verified = verified;
         this.approved = approved;
         this.games = games;
         this.gameObjects = gameObjects;
@@ -71,7 +75,7 @@ public class User {
     }
 
     public void setRole(UserRole role) {
-        this.role = (role == null) ? UserRole.User : role;
+        this.role = (role == null) ? UserRole.Seller : role;
     }
 
     public void setGames(ArrayList<Game> games) {
@@ -88,5 +92,10 @@ public class User {
 
     public void addGameObject(GameObject obj) {
         this.gameObjects.add(obj);
+    }
+
+    public String getFullName() {
+        return (firstName != null ? firstName.trim() : "") +
+                (lastName != null && !lastName.isBlank() ? " " + lastName.trim() : "");
     }
 }
