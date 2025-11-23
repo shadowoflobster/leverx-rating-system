@@ -15,4 +15,8 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Integer> {
     List<UserEntity> findByFullName(@Param("fullName") String fullName);
 
     Optional<UserEntity> findByEmail(String email);
+
+    List<UserEntity> findByApprovedFalse();
+
+
 }
