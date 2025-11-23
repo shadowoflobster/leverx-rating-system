@@ -7,7 +7,6 @@ import com.example.ratingsystem.application.ports.Comment.AddCommentPort;
 import com.example.ratingsystem.application.ports.Comment.DeleteCommentPort;
 import com.example.ratingsystem.application.ports.Comment.LoadCommentPort;
 import com.example.ratingsystem.application.ports.Comment.UpdateCommentPort;
-import com.example.ratingsystem.application.ports.User.LoadUserPort;
 import com.example.ratingsystem.domain.models.Comment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
