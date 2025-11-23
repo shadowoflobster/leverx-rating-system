@@ -8,6 +8,5 @@ import lombok.*;
 public class GameObjectRequest {
     private String title;
     private String description;
-    private Integer userId;
-    private Integer gameId;
+    private String gameTitle;
 }
