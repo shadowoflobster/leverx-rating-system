@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "games")
+@Table(name = "games", schema = "leverx_ratings")
 public class GameEntity {
     @Id
     private Integer id;
