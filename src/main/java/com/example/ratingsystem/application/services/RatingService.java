@@ -4,6 +4,8 @@ import com.example.ratingsystem.adapters.inbound.DTOs.requests.RatingRequest;
 import com.example.ratingsystem.adapters.inbound.DTOs.responses.RatingResponse;
 import com.example.ratingsystem.adapters.outbound.persistence.mappers.RatingMapper;
 import com.example.ratingsystem.application.ports.Rating.AddRatingPort;
+import com.example.ratingsystem.application.ports.Rating.DeleteRatingPort;
+import com.example.ratingsystem.application.ports.Rating.LoadRatingPort;
 import com.example.ratingsystem.domain.models.Rating;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,14 +13,30 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class RatingService {
-    private AddRatingPort addRatingPort;
-    public RatingMapper ratingMapper;
+    private final AddRatingPort addRatingPort;
+    private final LoadRatingPort loadRatingPort;
+    private final DeleteRatingPort deleteRatingPort;
+    private final RatingMapper ratingMapper;
 
 
     public RatingResponse addRating(Integer authorId, Integer targetId, RatingRequest ratingRequest) {
         Rating ratingDomain = addRatingPort.add(authorId, targetId, ratingRequest);
-
         return ratingMapper.domainToResponse(ratingDomain);
-
     }
+
+    public RatingResponse getRatingById(Integer id) {
+        Rating rating = loadRatingPort.loadById(id);
+        return ratingMapper.domainToResponse(rating);
+    }
+
+    public RatingResponse getRatingByAuthorAndTarget(Integer authorId, Integer targetId) {
+        Rating rating = loadRatingPort.loadByAuthorAndTargetId(authorId, targetId);
+        return ratingMapper.domainToResponse(rating);
+    }
+
+    public void deleteRating(Integer id) {
+        deleteRatingPort.deleteRatingById(id);
+    }
+
+
 }
