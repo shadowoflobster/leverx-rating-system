@@ -29,6 +29,9 @@ public class GameObjectEntity {
     @JoinColumn(name = "game_id")
     private GameEntity game;
 
+    @Column(name = "approved")
+    private boolean approved;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
