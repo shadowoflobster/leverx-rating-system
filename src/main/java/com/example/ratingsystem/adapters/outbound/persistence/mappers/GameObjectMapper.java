@@ -6,6 +6,7 @@ import com.example.ratingsystem.adapters.outbound.persistence.entities.GameEntit
 import com.example.ratingsystem.adapters.outbound.persistence.entities.GameObjectEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.models.GameObject;
+import com.example.ratingsystem.domain.models.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -59,6 +60,22 @@ public class GameObjectMapper {
         gameObject.setId(entity.getId());
 
         return gameObject;
+    }
+
+    public GameObject requestToDomain(GameObjectRequest request, User user, com.example.ratingsystem.domain.models.Game game) {
+        if (request == null) {
+            throw new IllegalArgumentException("GameObjectRequest cannot be null");
+        }
+
+        return GameObject.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .user(user)
+                .game(game)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .approved(false)
+                .build();
     }
 
 }
