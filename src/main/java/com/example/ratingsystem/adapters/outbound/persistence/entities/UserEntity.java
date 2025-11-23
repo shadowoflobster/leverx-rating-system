@@ -51,6 +51,9 @@ public class UserEntity {
     @Column(name = "is_approved")
     private boolean approved;
 
+    @Column(nullable = false)
+    private boolean verified;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
