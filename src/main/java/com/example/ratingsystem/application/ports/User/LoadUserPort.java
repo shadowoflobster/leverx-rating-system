@@ -16,4 +16,6 @@ public interface LoadUserPort {
     User loadByEmail(String email);
 
     UserEntity loadEntityByEmail(String email);
+
+    List<User> loadPendingUsers();
 }
