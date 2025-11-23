@@ -1,9 +1,9 @@
 package com.example.ratingsystem.adapters.outbound.persistence.jpaAdapters;
 
-import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.mappers.UserMapper;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
+import com.example.ratingsystem.application.ports.User.DeleteUserPort;
 import com.example.ratingsystem.application.ports.User.LoadUserPort;
 import com.example.ratingsystem.application.ports.User.SaveUserPort;
 import com.example.ratingsystem.domain.models.User;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Component
 @AllArgsConstructor
-public class UserAdapter implements LoadUserPort, SaveUserPort {
+public class UserAdapter implements LoadUserPort, SaveUserPort, DeleteUserPort {
     private JpaUserRepository userRepository;
     private UserMapper userMapper;
 
@@ -42,12 +42,20 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
     }
 
     @Override
-    public User save(UserRequest userRequest) {
-        if (userRequest == null) {
+    public User save(User user) {
+        if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
+        UserEntity entity;
 
-        UserEntity entity = userMapper.requestToEntity(userRequest);
+        if (user.getId() != null) {
+            entity = userRepository.findById(user.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+            entity.setApproved(user.isApproved());
+        } else {
+            entity = userMapper.domainToEntity(user);
+        }
         UserEntity savedEntity = userRepository.save(entity);
 
         return userMapper.entityToDomain(savedEntity);
@@ -66,6 +74,18 @@ public class UserAdapter implements LoadUserPort, SaveUserPort {
     public UserEntity loadEntityByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("No user found with email"));
+    }
+
+    @Override
+    public List<User> loadPendingUsers() {
+        return userRepository.findByApprovedFalse().stream()
+                .map(userMapper::entityToDomain)
+                .toList();
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        userRepository.deleteById(id);
     }
 
 
