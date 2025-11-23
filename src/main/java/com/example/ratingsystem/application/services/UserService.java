@@ -3,6 +3,7 @@ package com.example.ratingsystem.application.services;
 import com.example.ratingsystem.adapters.inbound.DTOs.requests.LoginRequest;
 import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
 import com.example.ratingsystem.adapters.inbound.security.JwtUtils;
+import com.example.ratingsystem.adapters.outbound.persistence.mappers.UserMapper;
 import com.example.ratingsystem.application.ports.User.LoadUserPort;
 import com.example.ratingsystem.application.ports.User.SaveUserPort;
 import com.example.ratingsystem.domain.models.User;
@@ -18,6 +19,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final LoadUserPort loadUserPort;
+    private final UserMapper userMapper;
 
     public String login(LoginRequest request) {
         User user = loadUserPort.loadByEmail(request.getEmail());
@@ -29,8 +31,12 @@ public class UserService {
         return jwtUtils.generateToken(user);
     }
 
-    public void registerUser(UserRequest request) {
-        saveUserPort.save(request);
+    public User registerUser(UserRequest request) {
+
+        User user = userMapper.requestToDomain(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return saveUserPort.save(user);
 
     }
 }
