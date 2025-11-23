@@ -4,6 +4,7 @@ import com.example.ratingsystem.domain.models.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -11,8 +12,8 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-
-    private final String secret = System.getenv("RATING_SYSTEM_KEY");
+    @Value("${rating-system.key}")
+    private String secret;
     private long expirationMs = 7200000;
 
     private Key getKey() {
