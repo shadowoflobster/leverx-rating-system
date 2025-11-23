@@ -31,9 +31,7 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
         if (targetId == null) {
             throw new IllegalArgumentException("Target user ID is required");
         }
-        if (authorEmail == null || authorEmail.isBlank()) {
-            throw new IllegalArgumentException("Author email is required");
-        }
+
         if (request == null || request.getMessage() == null || request.getMessage().isBlank()) {
             throw new IllegalArgumentException("Comment content is required");
         }
@@ -41,8 +39,12 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
         UserEntity target = jpaUserRepository.findById(targetId)
                 .orElseThrow(() -> new IllegalArgumentException("Target user not found"));
 
-        UserEntity author = jpaUserRepository.findByEmail(authorEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Author user not found"));
+        UserEntity author = null;
+
+        if (authorEmail != null) {
+            author = jpaUserRepository.findByEmail(authorEmail)
+                    .orElseThrow(() -> new IllegalArgumentException("Author user not found"));
+        }
 
         CommentEntity entity = commentMapper.requestToEntity(request, author, target);
 
