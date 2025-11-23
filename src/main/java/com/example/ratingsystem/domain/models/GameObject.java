@@ -14,14 +14,17 @@ public class GameObject {
     private String description;
     private User user;
     private Game game;
+    private boolean approved;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    public GameObject(String title,
+    public GameObject(Integer id,
+                      String title,
                       String description,
                       User user,
                       Game game,
+                      boolean approved,
                       LocalDateTime createdAt,
                       LocalDateTime updatedAt) {
 
@@ -32,10 +35,11 @@ public class GameObject {
         if (description != null) {
             this.description = null;
         }
-
+        this.id = id;
         this.title = title.trim();
         this.user = user;
         this.game = game;
+        this.approved = approved;
         this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
         this.updatedAt = updatedAt != null ? updatedAt : this.createdAt;
     }
