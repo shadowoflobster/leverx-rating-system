@@ -51,7 +51,7 @@ public class RatingMapper {
         }
 
         RatingEntity entity = new RatingEntity();
-        entity.setId(rating.getId()); // null if new
+        entity.setId(rating.getId());
         entity.setScore(rating.getScore());
         entity.setAuthor(rating.getAuthor() != null ? userMapper.domainToEntity(rating.getAuthor()) : null);
         entity.setTarget(rating.getTargetSeller() != null ? userMapper.domainToEntity(rating.getTargetSeller()) : null);
