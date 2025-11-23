@@ -1,6 +1,7 @@
 package com.example.ratingsystem.adapters.outbound.persistence.mappers;
 
 import com.example.ratingsystem.adapters.inbound.DTOs.requests.UserRequest;
+import com.example.ratingsystem.adapters.inbound.DTOs.responses.UserResponse;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.enums.UserRole;
 import com.example.ratingsystem.domain.models.User;
@@ -8,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Component
@@ -46,6 +48,7 @@ public class UserMapper {
             entity.setLastName(user.getLastName());
         }
         entity.setPassword(user.getPassword());
+        entity.setRole(user.getRole() != null ? user.getRole() : UserRole.Seller);
         entity.setGameObjects(new ArrayList<>());
         entity.setGivenComments(new ArrayList<>());
         entity.setTakenComments(new ArrayList<>());
@@ -55,31 +58,31 @@ public class UserMapper {
         return entity;
     }
 
-    public UserEntity requestToEntity(UserRequest request) {
-        if (request == null) {
-            return null;
-        }
+    public User requestToDomain(UserRequest request) {
 
-        UserEntity entity = new UserEntity();
+        return User.builder()
+                .id(null)
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .createdAt(LocalDateTime.now())
+                .role(null)
+                .verified(false)
+                .approved(false)
+                .games(new ArrayList<>())
+                .gameObjects(new ArrayList<>())
+                .build();
+    }
 
-        entity.setEmail(request.getEmail().trim().toLowerCase());
-        entity.setFirstName(request.getFirstName().trim());
-        if (request.getLastName() != null && !request.getLastName().isBlank()) {
-            entity.setLastName(request.getLastName().trim());
-        }
-        entity.setPassword(passwordEncoder.encode(request.getPassword()));
-        if (request.getRole() != null && !request.getRole().isBlank()) {
-            entity.setRole(UserRole.valueOf(request.getRole()));
-        } else {
-            entity.setRole(UserRole.Seller);
-        }
-        entity.setGameObjects(new ArrayList<>());
-        entity.setGivenComments(new ArrayList<>());
-        entity.setTakenComments(new ArrayList<>());
-        entity.setGivenRating(new ArrayList<>());
-        entity.setTakenRating(new ArrayList<>());
+    public UserResponse domainToResponse(User user) {
+        UserResponse response = new UserResponse();
+        response.setId(user.getId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
+        response.setRole(String.valueOf(user.getRole()));
 
-        return entity;
-
+        return response;
     }
 }
