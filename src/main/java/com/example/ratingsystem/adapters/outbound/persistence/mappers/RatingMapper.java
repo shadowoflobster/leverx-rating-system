@@ -37,7 +37,7 @@ public class RatingMapper {
 
         RatingEntity entity = new RatingEntity();
         entity.setScore(request.getScore());
-        entity.setAuthor(author);        // can be null if anonymous
+        entity.setAuthor(author);
         entity.setTarget(target);
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
