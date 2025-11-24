@@ -36,23 +36,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-        try {
-            if (jwtUtils.validate(token)) {
-                String username = jwtUtils.extractUsername(token);
-                UserDetails user = userDetailsService.loadUserByUsername(username);
+            try {
+                if (jwtUtils.validate(token)) {
+                    String username = jwtUtils.extractUsername(token);
+                    UserDetails user = userDetailsService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                user, null, user.getAuthorities()
-                        );
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }else{
-                System.out.println("Couldnt validate token");
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(
+                                    user, null, user.getAuthorities()
+                            );
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } else {
+                    System.out.println("Couldnt validate token");
+                }
+            } catch (Exception e) {
+                System.err.println("Authentication Error: " + e.getMessage());
             }
-        }catch (Exception e){
-            System.err.println("Authentication Error: " + e.getMessage());
-        }
         }
 
         chain.doFilter(request, response);

@@ -5,14 +5,18 @@ import com.example.ratingsystem.adapters.inbound.DTOs.responses.CommentResponse;
 import com.example.ratingsystem.adapters.inbound.DTOs.responses.UserResponse;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.CommentEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
+import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
 import com.example.ratingsystem.domain.models.Comment;
 import com.example.ratingsystem.domain.models.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class CommentMapper {
+    private final JpaUserRepository userRepository;
 
     public CommentEntity requestToEntity(CommentRequest request, UserEntity author, UserEntity target) {
         if (request == null) {
@@ -107,6 +111,34 @@ public class CommentMapper {
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
+    }
+
+    public CommentEntity domainToEntity(Comment domain) {
+        if (domain == null) {
+            throw new IllegalArgumentException("Comment domain cannot be null");
+        }
+
+        CommentEntity entity = new CommentEntity();
+
+        entity.setId(domain.getId());
+        entity.setMessage(domain.getMessage());
+        entity.setApproved(domain.isApproved());
+        entity.setCreatedAt(domain.getCreatedAt() != null ? domain.getCreatedAt() : LocalDateTime.now());
+        entity.setUpdatedAt(domain.getUpdatedAt() != null ? domain.getUpdatedAt() : LocalDateTime.now());
+
+        if (domain.getAuthor() != null && domain.getAuthor().getId() != null) {
+            entity.setAuthor(userRepository.getReferenceById(domain.getAuthor().getId()));
+        } else {
+            entity.setAuthor(null);
+        }
+
+        if (domain.getTargetSeller() != null && domain.getTargetSeller().getId() != null) {
+            entity.setTarget(userRepository.getReferenceById(domain.getTargetSeller().getId()));
+        } else {
+            throw new IllegalArgumentException("Target user required");
+        }
+
+        return entity;
     }
 }
 

@@ -2,7 +2,6 @@ package com.example.ratingsystem.adapters.inbound.rest;
 
 import com.example.ratingsystem.adapters.inbound.DTOs.requests.GameObjectRequest;
 import com.example.ratingsystem.adapters.inbound.DTOs.responses.GameObjectResponse;
-import com.example.ratingsystem.application.services.GameObjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

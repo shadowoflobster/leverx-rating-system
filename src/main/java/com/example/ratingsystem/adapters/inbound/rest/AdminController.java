@@ -17,7 +17,7 @@ import java.util.Map;
 public class AdminController {
     private final AdminService adminService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @GetMapping("/pending-users")
     public ResponseEntity<Map<String, Object>> getPendingUsers() {
         try {

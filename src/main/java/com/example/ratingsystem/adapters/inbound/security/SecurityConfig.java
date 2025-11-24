@@ -11,8 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
-@EnableMethodSecurity
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -27,8 +27,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("Administrator")
+                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/objects/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/rating/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/seller/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll()
+
+
+
                         .anyRequest().authenticated()
+
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
