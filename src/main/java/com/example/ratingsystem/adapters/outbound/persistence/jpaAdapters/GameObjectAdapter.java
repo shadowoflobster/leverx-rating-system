@@ -35,16 +35,21 @@ public class GameObjectAdapter implements AddGameObjectPort, LoadGameObjectPort,
         }
 
         UserEntity user = null;
-        if (authorEmail == null) {
+        if (authorEmail != null) {
             user = userRepository.findByEmail(authorEmail)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
         }
 
-        GameEntity game = null;
-        if (request.getGameTitle() != null) {
-            game = gameRepository.findByTitle(request.getGameTitle())
-                    .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+        if (request.getGameTitle() == null) {
+            throw new IllegalArgumentException("Game title cannot be null");
         }
+
+        GameEntity game = gameRepository.findByTitle(request.getGameTitle())
+                .orElseGet(() -> {
+                    GameEntity newGame = new GameEntity();
+                    newGame.setTitle(request.getGameTitle());
+                    return gameRepository.save(newGame);
+                });
 
         GameObjectEntity entity = gameObjectMapper.requestToEntity(request, user, game);
 
@@ -63,7 +68,7 @@ public class GameObjectAdapter implements AddGameObjectPort, LoadGameObjectPort,
 
     @Override
     public List<GameObject> loadBySellerId(Integer sellerId) {
-        return gameObjectRepository.findBySellerId(sellerId)
+        return gameObjectRepository.findByUserId(sellerId)
                 .stream()
                 .map(gameObjectMapper::entityToDomain)
                 .collect(Collectors.toList());
@@ -79,7 +84,7 @@ public class GameObjectAdapter implements AddGameObjectPort, LoadGameObjectPort,
 
     @Override
     public List<GameObject> loadByName(String name) {
-        return gameObjectRepository.findByNameContainingIgnoreCase(name)
+        return gameObjectRepository.findByTitleContainingIgnoreCase(name)
                 .stream()
                 .map(gameObjectMapper::entityToDomain)
                 .collect(Collectors.toList());
@@ -108,6 +113,13 @@ public class GameObjectAdapter implements AddGameObjectPort, LoadGameObjectPort,
 
         GameObjectEntity saved = gameObjectRepository.save(entity);
 
+        return gameObjectMapper.entityToDomain(saved);
+    }
+
+    @Override
+    public GameObject update(GameObject domain) {
+        GameObjectEntity entity = gameObjectMapper.domainToEntity(domain);
+        GameObjectEntity saved = gameObjectRepository.save(entity);
         return gameObjectMapper.entityToDomain(saved);
     }
 
