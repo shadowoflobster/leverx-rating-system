@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameResponse {
-    public Integer id;
+    private Integer id;
+    private String title;
+    private String description;
 }
