@@ -5,6 +5,7 @@ import com.example.ratingsystem.adapters.inbound.security.JwtUtils;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
 import com.example.ratingsystem.application.services.UserService;
+import com.example.ratingsystem.config.*;
 import com.example.ratingsystem.domain.enums.UserRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,7 +31,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:spring-context.xml", "classpath:spring-mvc.xml"})
+@ContextConfiguration(classes = {
+        AppConfig.class,
+        AppInitializer.class,
+        MailConfig.class,
+        RedisConfig.class,
+        SecurityInitializer.class,
+        WebConfig.class
+})
 @Transactional
 public class AuthorizationTest {
     @Autowired
