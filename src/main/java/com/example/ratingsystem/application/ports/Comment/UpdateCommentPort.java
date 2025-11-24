@@ -5,5 +5,7 @@ import com.example.ratingsystem.domain.models.Comment;
 
 public interface UpdateCommentPort {
     Comment updateComment(Integer id, CommentRequest request);
+
+    Comment update(Comment comment);
 }
 
