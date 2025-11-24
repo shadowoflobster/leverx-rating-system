@@ -22,7 +22,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: rating-redis
+    container_name: rating-system-redis
     restart: always
     ports:
       - "6379:6379"
@@ -35,8 +35,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      redis.host: redis
-      redis.port: 6379
+      redis-host: ${REDIS_HOST}
+      redis-port: ${REDIS_PORT}
       rating-system.key: ${RATING_SYSTEM_KEY}
       email: ${MAIL}
       emailp: ${MAILP}
@@ -49,7 +49,7 @@ services:
       db:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
 
 volumes:
   pgdata:
