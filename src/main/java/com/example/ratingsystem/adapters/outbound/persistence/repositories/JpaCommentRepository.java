@@ -10,4 +10,8 @@ public interface JpaCommentRepository extends JpaRepository<CommentEntity, Integ
 
     List<CommentEntity> findByTarget_Id(Integer targetId);
 
+    List<CommentEntity> findByIsApprovedFalse();
+
+
+
 }
