@@ -26,7 +26,6 @@ public class Rating {
                   LocalDateTime updatedAt
     ) {
         setScore(score);
-        if (author == null) throw new IllegalArgumentException("Author required");
         if (targetSeller == null) throw new IllegalArgumentException("Target Seller required");
         this.author = author;
         this.targetSeller = targetSeller;
