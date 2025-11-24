@@ -5,13 +5,15 @@ import com.example.ratingsystem.adapters.inbound.DTOs.responses.RatingResponse;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.RatingEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.models.Rating;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class RatingMapper {
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
 
     public RatingResponse domainToResponse(Rating rating) {
