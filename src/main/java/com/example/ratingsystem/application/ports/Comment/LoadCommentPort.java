@@ -11,4 +11,6 @@ public interface LoadCommentPort {
     List<Comment> loadByAuthorAndTargetId(Integer authorId, Integer targetId);
 
     List<Comment> loadByTargetId(Integer targetId);
+
+    List<Comment> loadPendingComments();
 }

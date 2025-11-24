@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LoadUserPort {
+    List<User> loadAll();
+
     Optional<User> loadById(Integer id);
 
     UserEntity loadEntityById(Integer id);
