@@ -29,6 +29,8 @@ public class UserMapper {
                 .email(entity.getEmail())
                 .password(entity.getPassword())
                 .createdAt(entity.getCreatedAt())
+                .approved(entity.isApproved())
+                .verified(entity.isVerified())
                 .role(entity.getRole())
                 .games(new ArrayList<>())
                 .gameObjects(new ArrayList<>())
