@@ -19,8 +19,8 @@ public class RatingService {
     private final RatingMapper ratingMapper;
 
 
-    public RatingResponse addRating(Integer authorId, Integer targetId, RatingRequest ratingRequest) {
-        Rating ratingDomain = addRatingPort.add(authorId, targetId, ratingRequest);
+    public RatingResponse addRating(String authorEmail, Integer targetId, RatingRequest ratingRequest) {
+        Rating ratingDomain = addRatingPort.add(authorEmail, targetId, ratingRequest);
         return ratingMapper.domainToResponse(ratingDomain);
     }
 
