@@ -16,13 +16,14 @@ import java.time.LocalDateTime;
 @Table(name = "ratings", schema = "leverx_ratings")
 public class RatingEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "score")
     private short score;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = true)
     private UserEntity author;
 
     @ManyToOne
