@@ -3,9 +3,7 @@ package com.example.ratingsystem.adapters.outbound.persistence.jpaAdapters;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.mappers.UserMapper;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
-import com.example.ratingsystem.application.ports.User.DeleteUserPort;
-import com.example.ratingsystem.application.ports.User.LoadUserPort;
-import com.example.ratingsystem.application.ports.User.SaveUserPort;
+import com.example.ratingsystem.application.ports.User.*;
 import com.example.ratingsystem.domain.models.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,9 +13,16 @@ import java.util.Optional;
 
 @Component
 @AllArgsConstructor
-public class UserAdapter implements LoadUserPort, SaveUserPort, DeleteUserPort {
+public class UserAdapter implements LoadUserPort, SaveUserPort, DeleteUserPort, VerifyUserPort, PasswordResetPort {
     private JpaUserRepository userRepository;
     private UserMapper userMapper;
+
+    @Override
+    public List<User> loadAll() {
+        return userRepository.findAll().stream()
+                .map(userMapper::entityToDomain)
+                .toList();
+    }
 
     @Override
     public Optional<User> loadById(Integer id) {
@@ -88,5 +93,34 @@ public class UserAdapter implements LoadUserPort, SaveUserPort, DeleteUserPort {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public void verify(User user) {
+        if (user == null || user.getId() == null) {
+            throw new IllegalArgumentException("User or User ID cannot be null for update");
+        }
+
+        UserEntity entity = userRepository.findById(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + user.getId()));
+
+        entity.setVerified(user.isVerified());
+
+        UserEntity savedEntity = userRepository.save(entity);
+        userMapper.entityToDomain(savedEntity);
+    }
+
+    @Override
+    public void resetPassword(User user) {
+        if (user == null || user.getId() == null) {
+            throw new IllegalArgumentException("User or User ID cannot be null for update");
+        }
+
+        UserEntity entity = userRepository.findById(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + user.getId()));
+
+        entity.setPassword(user.getPassword());
+
+        UserEntity savedEntity = userRepository.save(entity);
+        userMapper.entityToDomain(savedEntity);
+    }
 
 }
