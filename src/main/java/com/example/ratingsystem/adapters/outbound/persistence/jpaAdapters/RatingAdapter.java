@@ -2,12 +2,17 @@ package com.example.ratingsystem.adapters.outbound.persistence.jpaAdapters;
 
 import com.example.ratingsystem.adapters.inbound.DTOs.requests.RatingRequest;
 import com.example.ratingsystem.adapters.outbound.persistence.entities.RatingEntity;
+import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.adapters.outbound.persistence.mappers.RatingMapper;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaRatingRepository;
 import com.example.ratingsystem.adapters.outbound.persistence.repositories.JpaUserRepository;
 import com.example.ratingsystem.application.ports.Rating.AddRatingPort;
+import com.example.ratingsystem.application.ports.Rating.DeleteRatingPort;
 import com.example.ratingsystem.application.ports.Rating.LoadRatingPort;
+import com.example.ratingsystem.application.ports.User.LoadUserPort;
 import com.example.ratingsystem.domain.models.Rating;
+import com.example.ratingsystem.domain.models.User;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +23,15 @@ import java.util.OptionalDouble;
 
 @Component
 @AllArgsConstructor
-public class RatingAdapter implements AddRatingPort, LoadRatingPort {
-    private JpaUserRepository userRepository;
-    private RatingMapper ratingMapper;
-    private JpaRatingRepository ratingRepository;
+public class RatingAdapter implements AddRatingPort, LoadRatingPort, DeleteRatingPort {
+    private final JpaUserRepository userRepository;
+    private final RatingMapper ratingMapper;
+    private final JpaRatingRepository ratingRepository;
+    private final LoadUserPort loadUserPort;
 
     @Override
-    public Rating add(Integer authorId, Integer targetId, RatingRequest ratingRequest) {
+    @Transactional
+    public Rating add(String authorEmail, Integer targetId, RatingRequest ratingRequest) {
         if (targetId == null) {
             throw new IllegalArgumentException("Target id cannot be null");
         }
@@ -37,31 +44,46 @@ public class RatingAdapter implements AddRatingPort, LoadRatingPort {
             throw new IllegalArgumentException("Score must be between 1 and 5");
         }
 
-        if (authorId != null) {
-            Optional<RatingEntity> existing =
-                    ratingRepository.findByAuthor_IdAndTarget_Id(authorId, targetId);
+        UserEntity target = userRepository.findById(targetId)
+                .orElseThrow(() -> new IllegalArgumentException("Target user not found"));
+
+        UserEntity author = null;
+
+        try {
+            User user = loadUserPort.loadByEmail(authorEmail);
+            if (user != null) {
+                author = userRepository.findById(user.getId()).orElse(null);
+            }
+        } catch (Exception ignored) {
+        }
+
+        RatingEntity entity;
+
+        if (author != null) {
+            Optional<RatingEntity> existing = ratingRepository
+                    .findByAuthor_IdAndTarget_Id(author.getId(), targetId);
 
             if (existing.isPresent()) {
-                RatingEntity entity = existing.get();
+                entity = existing.get();
                 entity.setScore(score);
                 entity.setUpdatedAt(LocalDateTime.now());
-                return ratingMapper.entityToDomain(ratingRepository.save(entity));
+            } else {
+                entity = new RatingEntity();
+                entity.setAuthor(author);
+                entity.setTarget(target);
+                entity.setScore(score);
+                entity.setCreatedAt(LocalDateTime.now());
             }
-
-            RatingEntity entity = new RatingEntity();
+        } else {
+            entity = new RatingEntity();
+            entity.setAuthor(null);
+            entity.setTarget(target);
             entity.setScore(score);
-            entity.setAuthor(userRepository.getReferenceById(authorId));
-            entity.setTarget(userRepository.getReferenceById(targetId));
             entity.setCreatedAt(LocalDateTime.now());
-
-            return ratingMapper.entityToDomain(ratingRepository.save(entity));
         }
-        RatingEntity anonymous = new RatingEntity();
-        anonymous.setScore(score);
-        anonymous.setTarget(userRepository.getReferenceById(targetId));
-        anonymous.setCreatedAt(LocalDateTime.now());
 
-        return ratingMapper.entityToDomain(ratingRepository.save(anonymous));
+        RatingEntity saved = ratingRepository.save(entity);
+        return ratingMapper.entityToDomain(saved);
     }
 
     @Override
@@ -100,6 +122,11 @@ public class RatingAdapter implements AddRatingPort, LoadRatingPort {
         return entities.stream()
                 .map(ratingMapper::entityToDomain)
                 .toList();
+    }
+
+    @Override
+    public void deleteRatingById(Integer id) {
+        ratingRepository.deleteById(id);
     }
 
 
