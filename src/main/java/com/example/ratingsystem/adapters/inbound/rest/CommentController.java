@@ -21,20 +21,12 @@ public class CommentController {
     @PostMapping("/{id}/comments")
     public ResponseEntity<?> addComment(@PathVariable("id") Integer id,
                                         @RequestBody CommentRequest request,
-                                        Authentication authentication
-    ) {
-        System.out.println("Authentication object: " + authentication);
-        if (authentication == null || !authentication.isAuthenticated() ||
-                authentication.getPrincipal() == null) {
+                                        Authentication authentication) {
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(
-                            "success", false,
-                            "message", "You must be logged in to comment"
-                    ));
-        }
-        String authorEmail = authentication.getName();
+        String authorEmail = (authentication != null && authentication.isAuthenticated())
+                ? authentication.getName()
+                : null;
+
         try {
             CommentResponse commentResponse = commentService.addComment(id, request, authorEmail);
 
