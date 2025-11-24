@@ -95,6 +95,13 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
     }
 
     @Override
+    public List<Comment> loadPendingComments() {
+        return jpaCommentRepository.findByIsApprovedFalse().stream()
+                .map(commentMapper::entityToDomain)
+                .toList();
+    }
+
+    @Override
     public void deleteCommentById(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Comment ID cannot be null");
@@ -124,6 +131,15 @@ public class CommentAdapter implements AddCommentPort, LoadCommentPort, DeleteCo
         CommentEntity saved = jpaCommentRepository.save(entity);
 
         return commentMapper.entityToDomain(saved);
+    }
+
+    @Override
+    @Transactional
+    public Comment update(Comment comment) {
+        CommentEntity entity = commentMapper.domainToEntity(comment);
+        CommentEntity saved = jpaCommentRepository.save(entity);
+        return commentMapper.entityToDomain(saved);
+
     }
 
 
