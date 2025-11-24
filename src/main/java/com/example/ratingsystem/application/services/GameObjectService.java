@@ -54,11 +54,4 @@ public class GameObjectService {
     public GameObject updateById(Integer id, GameObjectRequest request) {
         return updateGameObjectPort.updateById(id, request);
     }
-
-    // Optional admin approval logic
-    public GameObject approveGameObject(Integer id) {
-        GameObject gameObject = updateGameObjectPort.updateById(id, null);
-        gameObject.setApproved(true);
-        return gameObject;
-    }
 }
