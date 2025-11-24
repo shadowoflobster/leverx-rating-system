@@ -7,14 +7,17 @@ import com.example.ratingsystem.adapters.outbound.persistence.entities.GameObjec
 import com.example.ratingsystem.adapters.outbound.persistence.entities.UserEntity;
 import com.example.ratingsystem.domain.models.GameObject;
 import com.example.ratingsystem.domain.models.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class GameObjectMapper {
-    private UserMapper userMapper;
-    private GameMapper gameMapper;
+    private final UserMapper userMapper;
+    private final GameMapper gameMapper;
+
 
     public GameObjectResponse domainToResponse(GameObject domain) {
         GameObjectResponse response = new GameObjectResponse();
@@ -77,5 +80,32 @@ public class GameObjectMapper {
                 .approved(false)
                 .build();
     }
+
+    public GameObjectEntity domainToEntity(GameObject domain) {
+        if (domain == null) {
+            throw new IllegalArgumentException("GameObject domain cannot be null");
+        }
+
+        GameObjectEntity entity = new GameObjectEntity();
+
+        entity.setId(domain.getId());
+
+        entity.setTitle(domain.getTitle());
+        entity.setDescription(domain.getDescription());
+        entity.setApproved(domain.isApproved());
+        entity.setCreatedAt(domain.getCreatedAt());
+        entity.setUpdatedAt(LocalDateTime.now());
+
+        if (domain.getUser() != null) {
+            entity.setUser(userMapper.domainToEntity(domain.getUser()));
+        }
+
+        if (domain.getGame() != null) {
+            entity.setGame(gameMapper.domainToEntity(domain.getGame()));
+        }
+
+        return entity;
+    }
+
 
 }
