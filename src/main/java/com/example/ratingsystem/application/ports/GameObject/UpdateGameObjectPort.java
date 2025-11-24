@@ -5,4 +5,7 @@ import com.example.ratingsystem.domain.models.GameObject;
 
 public interface UpdateGameObjectPort {
     GameObject updateById(Integer id, GameObjectRequest gameObjectRequest);
+
+    GameObject update(GameObject gameObject);
+
 }
