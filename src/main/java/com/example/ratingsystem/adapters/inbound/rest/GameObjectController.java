@@ -6,6 +6,7 @@ import com.example.ratingsystem.application.services.GameObjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +18,19 @@ import java.util.Map;
 @RequestMapping("/objects")
 @RequiredArgsConstructor
 public class GameObjectController {
-    private GameObjectService gameObjectService;
+    private final GameObjectService gameObjectService;
 
     @PostMapping("")
-    public ResponseEntity<?> addObject(@RequestBody GameObjectRequest request) {
+    public ResponseEntity<?> addObject(
+            @RequestBody GameObjectRequest request,
+            Authentication authentication
+    ) {
         try {
-            GameObjectResponse gameObject = gameObjectService.addGameObject(request);
+            if (authentication == null) {
+                throw new IllegalArgumentException("You should be logged in to continue");
+            }
+            String email = authentication.getName();
+            GameObjectResponse gameObject = gameObjectService.addGameObject(email, request);
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
