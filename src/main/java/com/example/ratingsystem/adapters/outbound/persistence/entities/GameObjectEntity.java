@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "game_objects", schema = "leverx_ratings")
 public class GameObjectEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "title")
