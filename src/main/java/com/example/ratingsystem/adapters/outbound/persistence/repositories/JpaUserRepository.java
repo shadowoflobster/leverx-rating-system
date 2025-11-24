@@ -18,5 +18,7 @@ public interface JpaUserRepository extends JpaRepository<UserEntity, Integer> {
 
     List<UserEntity> findByApprovedFalse();
 
+    void deleteByEmail(String email);
+
 
 }
